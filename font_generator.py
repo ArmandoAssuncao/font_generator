@@ -41,17 +41,19 @@ def generateFont(outputFile, listGlyphs, codePoint):
 
     # add chars
     for fileName in listGlyphs:
-        glyph = font.createChar(codePoint).importOutlines(fileName)
+        char = font.createChar(codePoint)
+        char.importOutlines(fileName)
 
-        if glyph.validate() == 0:
+        # if importOutlines not changed the char, probably the char contains errors
+        if not char.changed:
             print 'file with error: ' + fileName
             continue
 
         # align in left
-        glyph.left_side_bearing = 0
+        char.left_side_bearing = 0
         # set width
-        x_max = glyph.boundingBox()[2]
-        glyph.width = glyph.vwidth = x_max
+        x_max = char.boundingBox()[2]
+        char.width = char.vwidth = x_max
 
         # add glyphmap
         basename = os.path.splitext(os.path.basename(fileName))[0]
